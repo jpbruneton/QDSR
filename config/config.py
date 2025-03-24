@@ -60,7 +60,6 @@ def default_n_cores(proportion) -> int:
     Returns:
     int: Number of CPU cores.
     """
-    return 40
     available_cores = psutil.cpu_count(logical=True)
     return max(int(proportion * available_cores), 1)
 
@@ -97,8 +96,8 @@ def get_config(search_intensity: str) -> dict:
             'function_list': large_function_list,
 
             # target related
-            'use_noise': True,  # add noise to the target values
-            'noise_level': 0.1, #only allowed 0.0, 0.001, 0.01, 0.1 as in literature
+            'use_noise': False,  # add noise to the target values
+            'noise_level': 0.0, #only allowed 0.0, 0.001, 0.01, 0.1 as in literature
             'use_denoising': False,  # use denoising in the preprocessing step using KD Tree algorithm
             'k_neighbors': 2,  # number of neighbors to use in the KD Tree algorithm
 

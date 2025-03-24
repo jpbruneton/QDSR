@@ -8,11 +8,11 @@ import pandas as pd
 
 # Example file where you want to run the solver on other targets than Feynmann AI.
 
-###################  CASE I : give yourself a formula and run the solver on it
+###################  CASE I : give yourself a formula and run the solver on it ; from a given file : see : Launch_from_file
 
 ############   see Launch_custom_run2.py for case II where data is provided, and formula may not be known
 
-## Say you want to discover f(x) = 3.01*x*y*sin(0.52*x/y), where x and y have dimension of length
+## Say you want to discover f(x) = 3.01*sqrt(x**2 + y**2) -1.21*x*x/y, where x and y have dimension of length
 
 ## Step 1. Give a name to the dataset, say 'my_dataset',
 # also provide n_var, var_names, var dimensions
@@ -20,16 +20,13 @@ import pandas as pd
 # **** Functions must be written in usual format (eg. exp(), not np.exp()) ****
 
 dataset_name = 'my_dataset'
-true_name_variables = ['x', 'y', 'z']
+true_name_variables = ['x', 'y']
 n_var = len(true_name_variables)
-unit_dict = {'x': {'m': 0, 's': 0, 'kg': 0, 'T': 0, 'V': 0}, 'y': {'m': 0, 's': 0, 'kg': 0, 'T': 0, 'V': 0}, 'z': {'m': 0, 's': 0, 'kg': 0, 'T': 0, 'V': 0}}
+unit_dict = {'x': {'m': 1, 's': 0, 'kg': 0, 'T': 0, 'V': 0},
+             'y': {'m': 1, 's': 0, 'kg': 0, 'T': 0, 'V': 0}}
 formula = '3.01*sqrt(x**2 + y**2) -1.21*x*x/y'
-formula = '0.51*x*y*sin(0.52*x/y)'
-formula = '1 + x + x**2 + x**3 + x**4 + x**5'
-formula = 'x*y*z'
-
 equation_label = 'my_formula_1'
-var_range = {'x': (0, 2), 'y': (0,2), 'z' : (1,5) } #positive here to ensure log is well-defined
+var_range = {'x': (1, 5), 'y': (1,5) }
 n_points = 50000
 
 must_be_true = ('A' not in formula) and all(['A' not in x for x in true_name_variables])
@@ -87,10 +84,10 @@ def solve_my_formula(dataset_name, n_var, true_name_variables, unit_dict, formul
         cfg,
         ground_truth
     )
-    final_answer, is_trivial, solution_found, iteration, elapsed_time, eq_seen, QD_object = solver.solve()
+    final_answer, is_trivial, solution_found, exact_recovery, iteration, elapsed_time, eq_seen, QD_object = solver.solve()
     del solver
     gc.collect()
-    print(f'Final answer: {final_answer}, is trivial: {is_trivial}, solution found: {solution_found}, iteration: {iteration}, elapsed time: {elapsed_time}')
+    print(f'Final answer: {final_answer}, is trivial: {is_trivial}, solution found: {solution_found}, excat_recovery: {exact_recovery}, iteration: {iteration}, elapsed time: {elapsed_time}')
 
 if __name__ == '__main__':
     solve_my_formula(dataset_name, n_var, true_name_variables, unit_dict, formula, equation_label, var_range, n_points)

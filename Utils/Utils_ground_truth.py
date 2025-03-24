@@ -687,6 +687,12 @@ def Build_Feynmann_Formula_Dict(
     unit_dict = Utils_io.get_unit_dict(dataset_name)
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     loading_path = os.path.join(root_dir, f'Targets/{dataset_name}/FeynmanEquations_cleaned.csv')
+    if not os.path.exists(loading_path):
+        #try with
+        loading_path = os.path.join(root_dir, f'Targets/{dataset_name}/FeynmanEquations.csv')
+        if not os.path.exists(loading_path):
+            raise ValueError(f"File 'FeynmanEquations.csv' not found in {root_dir}/Targets/{dataset_name}/")
+
     save_path = os.path.join(root_dir, f'Targets/{dataset_name}/formula_dict_with_units')
     eq_path = os.path.join(root_dir, f'Targets/{dataset_name}/raw_data')
     with open(loading_path, 'r') as f:
@@ -730,8 +736,13 @@ def Build_units_dict(dataset_name) -> dict:
     """
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     loading_path = os.path.join(root_dir, f'Targets/{dataset_name}/units_cleaned.csv')
-    target_path = os.path.join(root_dir, f'Targets/{dataset_name}/unit_dict.pkl')
+    if not os.path.exists(loading_path):
+        #try with
+        loading_path = os.path.join(root_dir, f'Targets/{dataset_name}/units.csv')
+        if not os.path.exists(loading_path):
+            raise ValueError(f"File 'units.csv' not found in {root_dir}/Targets/{dataset_name}/")
 
+    target_path = os.path.join(root_dir, f'Targets/{dataset_name}/unit_dict.pkl')
     unit_dict = {}
     try:
         df = pd.read_csv(loading_path, sep=',')

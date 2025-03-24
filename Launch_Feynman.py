@@ -49,7 +49,7 @@ def main(task: tuple) -> tuple:
     Main function to execute the GP solver for a given task.
     """
     try:
-        dataset_name, cfg, equation_label, multi_processing, n_cores, run_number = task
+        dataset_name, cfg, equation_label, multi_processing, n_cores, run_number, recompute = task
         # reproducibility
         # WARNING : on using parallel tree generation, the results are not reproducible, because the seed is different on each subprocess
         # to turn off parallel tree generation, set use_parallel_tree_generation = False in config/config.py
@@ -59,7 +59,7 @@ def main(task: tuple) -> tuple:
 
         ground_truth = Utils_io.load_ground_truth(dataset_name, equation_label)
         Utils_data.preprocess_data(equation_label, dataset_name, ground_truth, cfg['use_noise'], cfg['noise_level'],
-                                   cfg['use_denoising'], cfg['k_neighbors'])
+                                   cfg['use_denoising'], cfg['k_neighbors'], recompute = recompute)
 
         # two steps solving
         solver = GPSolver(
@@ -107,27 +107,23 @@ def main(task: tuple) -> tuple:
         print(f"Error solving {equation_label}: {e}")
         raise e
 
-
-def execute_tasks(dataset_name, cfg, eqs, run_all_parallel, run_number):
+def execute_tasks(dataset_name, cfg, eqs, run_all_parallel, run_number, path, recompute):
     """
     Execute tasks either in parallel or sequentially.
     """
     if run_all_parallel:
         tasks = [[dataset_name, cfg, eq, False, 1, run_number] for eq in eqs]
-        # par batch de 20 sinon pb de mem:
-        batch_tasks = tasks
-        # for batch in tasks:
         with mp.Pool(n_cores) as mp_pool:
-            results = mp_pool.map(main, tasks)
-            log_results(results)
+            result = mp_pool.map(main, tasks)
+            log_results(*result, path)
 
     else:
         for equation_label in eqs:
-            task = [dataset_name, cfg, equation_label, True, n_cores, run_number]
+            task = [dataset_name, cfg, equation_label, True, n_cores, run_number, recompute]
             result = main(task)
-            log_results(*result, cfg)
+            log_results(*result, path)
 
-def log_results(final_answer, is_trivial, solution_found, iteration, elapsed_time, equation_label, eqseen, recovery, cfg):
+def log_results(final_answer, is_trivial, solution_found, iteration, elapsed_time, equation_label, eqseen, recovery, path):
     """
     Log the results of the GP solver.
     """
@@ -154,30 +150,27 @@ def log_results(final_answer, is_trivial, solution_found, iteration, elapsed_tim
         pickle.dump(all_results, f)
 
 def load_equation_list():
-    dimensionally_trivial, very_easy, easy, medium, hard, not_found, bonus = Utils_misc.load_equation_list()
-    all = dimensionally_trivial + very_easy + easy + medium + hard + not_found + bonus
-    return very_easy + easy + medium + hard + not_found + bonus
+    dimensionally_trivial, very_easy, easy_table, medium_table, hard_table = Utils_misc.load_equation_list()
+    return very_easy + easy_table + medium_table + hard_table
 
 if __name__ == '__main__':
-
+    recompute = True # Set to True to recompute the data from scratch from actual formula
     dataset_name = 'Feynman_with_units'  # can be also 'Feynman_without_units'
     search_intensity = 'custom'  # Set search intensity as per requirement
     cfg = get_config(search_intensity)
     initialize_environment(dataset_name, cfg)
     eqs = load_equation_list()
-
-    redo_5_noise = ['test_2', 'test_3', 'test_14', 'I.26.2', 'test_13', 'test_16','I.29.16']
-    redo_5_ab0 = ['III.4.33', 'I.41.16' ,'I.15.3x' , 'test_6', '1.15.3t']
+    output_path = 'results_custom_run.pkl'
 
     print('running on', len(eqs), 'equations')
     for equation_label in eqs:
         Utils_io.check_data_downloads(dataset_name, equation_label)
 
-    for run_number in range(5):
+    for run_number in range(10):
         run_targets_in_parallel = 0
         if len(eqs) == 1:
             run_targets_in_parallel = False
 
         # Execute tasks
-        execute_tasks(dataset_name, cfg, eqs, run_targets_in_parallel, run_number)
+        execute_tasks(dataset_name, cfg, eqs, run_targets_in_parallel, run_number, output_path, recompute)
         print("End of processing.")

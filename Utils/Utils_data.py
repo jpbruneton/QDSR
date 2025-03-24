@@ -74,16 +74,12 @@ def preprocess_data(equation_label, dataset_name, ground_truth, use_noise, noise
         dataframe = load_target_from_data(original_csv_path)
         data_numpy = dataframe.to_numpy()
         X = data_numpy[:, :-1] #original variables
-
-        # f = data_numpy[:, -1] #target function is allways the last column
-        # we want to recompute f = f(X) from the formula and the provided vars,
-        # because the actual data from the website is not always to numerical precision
-        # thus
-
-        formula = ground_truth['formula']
-        true_name_to_internal_name_dict = ground_truth['true_name_to_internal_name_dict']
-        f = compute_target(formula, true_name_to_internal_name_dict, n_variables, X)
-
+        if not recompute:
+            f = data_numpy[:, -1] #target function is allways the last column
+        else:
+            formula = ground_truth['formula']
+            true_name_to_internal_name_dict = ground_truth['true_name_to_internal_name_dict']
+            f = compute_target(formula, true_name_to_internal_name_dict, n_variables, X)
         # complete flags in the ground truth file
         ground_truth['is_target_everywhere_positive'] = all(f > 0)
         ground_truth['apply_global_minus_one'] = all(f < 0)
