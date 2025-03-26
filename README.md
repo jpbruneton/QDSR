@@ -6,7 +6,7 @@ This repository provides the implementation of **QDSR**, a state-of-the-art **sy
 
 QDSR achieves **high exact recovery rates** on benchmark datasets, surpassing existing methods by a large margin.  
 
-🔗 **Reference:** If you use QDSR in your work, please cite our paper: **[arXiv:----.-----](https://arxiv.org/abs/----.-----)**.  
+🔗 **Reference:** If you use QDSR in your work, please cite our paper: **[arXiv:2503.19043](https://arxiv.org/abs/2503.19043)**.  
 
 ---
 
