@@ -127,7 +127,6 @@ def log_results(final_answer, is_trivial, solution_found, iteration, elapsed_tim
     """
     Log the results of the GP solver.
     """
-    path = f'results_noise3.pkl'
     if not os.path.exists(path):
         all_results = {}
     else:
