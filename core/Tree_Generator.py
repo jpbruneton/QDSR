@@ -849,6 +849,7 @@ def generate_random_trees(num_trees, ground_truth, cfg, max_length, global_vocab
             new_trees += generate_from_scratch(budget, target_dimension, vocabulary_original_var_only, cfg, max_length,
                                               is_target_everywhere_positive)
             new_trees += generate_from_fraction(budget, ground_truth, vocabulary_original_var_only, cfg, max_length, eigenvector, global_vocabulary)
+            l = len(new_trees)
             new_trees += generate_from_prefactoring(num_trees-l, ground_truth, vocabulary_original_var_only, cfg, max_length, eigenvector,  n_units, global_vocabulary)
 
     if use_simplification:
