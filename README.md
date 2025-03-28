@@ -28,7 +28,8 @@ To test QDSR on the Feynman-AI dataset from SR-Bench:
 1. Download the dataset (with units) from the Feynman-AI website.
 2. Unzip it into the following directory:
 Targets/Feynman_with_units/raw_data/
-3. Check config/config.py to define metaparameters such as max length, time bufget, verbosity level, etc
+There should be 117 csv files (do not forget to unzip bonus equation as well, named test_1... to test_20.csv)
+4. Check config/config.py to define metaparameters such as max length, time bufget, verbosity level, etc
 3. Run python Launch_Feynman.py
 
 ### Running QDSR on Custom Data
