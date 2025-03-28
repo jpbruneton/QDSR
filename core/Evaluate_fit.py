@@ -18,8 +18,6 @@ from config import config
 from scipy.optimize import least_squares
 from core import Target
 from typing import List, Tuple, Optional
-import cma
-
 
 def compute_loss(formula: str, y_true: np.ndarray, X : np.ndarray, A: Optional[List] = None) -> float:
     """
