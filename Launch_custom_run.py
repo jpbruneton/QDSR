@@ -40,7 +40,7 @@ def solve_my_formula(dataset_name, n_var, true_name_variables, unit_dict, formul
     ## Step 2. Create a folder in the Targets directory with the name of the dataset
     Utils_io.create_directory(dataset_name)
 
-    ## Step 3: create the ground truth dictionary ; NB target dimension (here L^2) will be computed automatically
+    ## Step 3: create the ground truth dictionary ; NB target dimension (here L) will be computed automatically
     search_intensity = 'custom'
     cfg = get_config(search_intensity)
     ground_truth = Utils_ground_truth.create_ground_truth_dict_for_equation(
