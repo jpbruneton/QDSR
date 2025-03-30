@@ -11,7 +11,7 @@ num_fundamental_units = len(fundamental_units)
 MAX_NESTED_FUNCTIONS = 2  # Maximum number of nested functions to use in the equations sin(cos(x) is ok but sin(exp(sqrt(x))) is not
 MAX_NESTED_POWERS = 2  # Maximum number of scalars to use in the equations
 
-metric = 'R2'  # other choice is 'R2'
+metric = 'R2'  # other choice is 'NRMSE'
 max_bad_loss = 1000 if metric == 'NRMSE' else -1e3  # loss threshold to avoid updating the pool with high-loss individuals
 failure_loss = 1e6 if metric == 'NRMSE' else -1e6  # default failure loss when evaluation fails (nans, inf, complex values, zero division, etc)
 termination_loss = 1e-14 if metric == 'NRMSE' else 1 - 1e-14  # close to numerical precision
