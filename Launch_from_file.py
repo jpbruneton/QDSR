@@ -107,15 +107,15 @@ for k, v in ground_truth.items():
 # norms: {'norm0': '(x0)**2 + (x1)**2', 'norm1': 'x0**2 - x1**2'}
 # norms_dim: {'norm0': [2, 0, 0, 0, 0], 'norm1': [2, 0, 0, 0, 0]}
 
-
-# Step 4 : run the solver
-from Launch_Feynman import main
-
-multi_processing = True
-n_cores = config.default_n_cores(0.9)
-run_number = 0
-recompute = False
-task = (dataset_name, cfg, equation_label, multi_processing, n_cores, run_number, recompute)
-main(task)
-# the exact recovery engine is not gonna work here because the ground truth formula is unknown ; todo : add a flag
+if __name__ == '__main__':
+  # Step 4 : run the solver
+  from Launch_Feynman import main
+  
+  multi_processing = True
+  n_cores = config.default_n_cores(0.9)
+  run_number = 0
+  recompute = False
+  task = (dataset_name, cfg, equation_label, multi_processing, n_cores, run_number, recompute)
+  main(task)
+  # the exact recovery engine is not gonna work here because the ground truth formula is unknown ; todo : add a flag
 
